@@ -1,0 +1,294 @@
+#include <iostream>
+#include <ctime>
+#include <stdlib.h>
+#include <time.h>
+#include <fstream>
+using namespace std;
+
+bool Check_Conflicts(int p, int i, int j, int mass[9][9])
+  {
+    if((j == 1 || j == 4 || j == 7) && (i == 1 || i == 4 || i == 7))
+      {
+         if(mass[i][j+1] == p || mass[i][j+2] == p || mass[i+1][j] == p ||
+        		 mass[i+2][j] == p || mass[i+1][j+1] == p || mass[i+1][j+2] == p ||
+				 mass[i+2][j+1] == p || mass[i+2][j+2] == p)return false;
+      }
+    if((j == 1 || j == 4 || j == 7) && (i == 3 || i == 6 || i == 9))
+      {
+         if(mass[i-1][j] == p || mass[i-2][j] == p || mass[i][j+1] == p ||
+        		 mass[i][j+2] == p || mass[i-1][j+1] == p || mass[i-1][j+2] == p ||
+				 mass[i-2][j+1] == p || mass[i-2][j+2] == p)return false;
+      }
+    if((j == 1 || j == 4 || j == 7) && (i == 2 || i == 5 || i == 8))
+      {
+         if(mass[i-1][j] == p || mass[i+1][j] == p || mass[i-1][j+1] == p ||
+        		 mass[i][j+1] == p || mass[i+1][j+1] == p || mass[i+1][j+2] == p ||
+				 mass[i][j+2] == p || mass[i+1][j+2] == p)return false;
+      }
+    if((j == 2 || j == 5 || j == 8) && (i == 1 || i == 5 || i == 7))
+      {
+         if(mass[i-1][j] == p || mass[i+1][j] == p || mass[i-1][j+1] == p ||
+        		 mass[i][j+1] == p || mass[i+1][j+1] == p || mass[i+1][j+2] == p ||
+				 mass[i][j+2] == p || mass[i+1][j+2] == p)return false;
+      }
+    if((j == 2 || j == 5 || j == 8) && (i == 2 || i == 5 || i == 8))
+      {
+         if(mass[i-1][j] == p || mass[i-1][j-1] == p || mass[i-1][j+1] == p ||
+        		 mass[i][j+1] == p || mass[i][j-1] == p || mass[i+1][j+1] == p ||
+				 mass[i][j] == p || mass[i+1][j-1] == p)return false;
+      }
+    if((j == 2 || j == 5 || j == 8) && (i == 3 || i == 6 || i == 9))
+      {
+         if(mass[i][j-1] == p || mass[i][j+1] == p || mass[i-1][j] == p ||
+        		 mass[i-1][j+1] == p || mass[i-1][j-1] == p || mass[i-2][j] == p ||
+				 mass[i-1][j+1] == p || mass[i-2][j-1] == p) return false;
+      }
+    if((j == 3 || j == 6 || j == 9) && (i == 1 || i == 4 || i == 7))
+      {
+         if(mass[i][j-1] == p || mass[i][j-2] == p || mass[i+1][j] == p ||
+        		 mass[i+1][j-1] == p || mass[i+1][j-2] == p || mass[i+2][j] == p ||
+				 mass[i+2][j-1] == p || mass[i+2][j-2] == p) return false;
+      }
+    if((j == 3 || j == 6 || j == 9) && (i == 2 || i == 5 || i == 8))
+      {
+         if(mass[i-1][j] == p || mass[i-1][j-1] == p || mass[i-1][j-2] == p ||
+        		 mass[i][j-1] == p || mass[i][j-2] == p || mass[i+1][j] == p ||
+				 mass[i+1][j-1] == p || mass[i+1][j-2] == p) return false;
+      }
+    if((j == 3 || j == 6 || j == 9) && (i == 3 || i == 6 || i == 9))
+      {
+         if(mass[i][j-1] == p || mass[i][j-1] == p || mass[i-1][j] == p ||
+        		 mass[i-1][j-1] == p || mass[i-1][j-2] == p || mass[i-2][j] == p ||
+				 mass[i-2][j-1] == p || mass[i-2][j-2] == p) return false;
+      }
+    if (mass[i][0] == p ||
+    		mass[i][1] == p || mass[i][2] == p ||
+			mass[i][3] == p || mass[i][4] == p ||
+			mass[i][5] == p || mass[i][6] == p ||
+			mass[i][7] == p || mass[i][8] == p ||
+			mass[1][j] == p || mass[2][j] == p ||
+			mass[3][j] == p || mass[4][j] == p ||
+			mass[5][j] == p || mass[6][j] == p ||
+			mass[7][j] == p || mass[8][j] == p ||
+			mass[0][j] == p) return false;
+
+    return true;
+  }
+
+int main()
+{
+	srand( time( 0 ) );
+	int random = 15 + rand() % 15;
+	int random2 = 15 + rand() % 15;
+	int random3 = 15 + rand() % 15;
+    const int n=9;
+    int g;
+    int a[n][n];
+    int b[n];
+    int a1[n][n];
+    a[0][0] = 1;  a[3][0] = 2;  a[6][0] = 3;
+    a[0][1] = 2;  a[3][1] = 3;  a[6][1] = 4;
+    a[0][2] = 3;  a[3][2] = 4;  a[6][2] = 5;
+    a[0][3] = 4;  a[3][3] = 5;  a[6][3] = 6;
+    a[0][4] = 5;  a[3][4] = 6;  a[6][4] = 7;
+    a[0][5] = 6;  a[3][5] = 7;  a[6][5] = 8;
+    a[0][6] = 7;  a[3][6] = 8;  a[6][6] = 9;
+    a[0][7] = 8;  a[3][7] = 9;  a[6][7] = 1;
+    a[0][8] = 9;  a[3][8] = 1;  a[6][8] = 2;
+
+    a[1][0] = 4;  a[4][0] = 5;  a[7][0] = 6;
+    a[1][1] = 5;  a[4][1] = 6;  a[7][1] = 7;
+    a[1][2] = 6;  a[4][2] = 7;  a[7][2] = 8;
+    a[1][3] = 7;  a[4][3] = 8;  a[7][3] = 9;
+    a[1][4] = 8;  a[4][4] = 9;  a[7][4] = 1;
+    a[1][5] = 9;  a[4][5] = 1;  a[7][5] = 2;
+    a[1][6] = 1;  a[4][6] = 2;  a[7][6] = 3;
+    a[1][7] = 2;  a[4][7] = 3;  a[7][7] = 4;
+    a[1][8] = 3;  a[4][8] = 4;  a[7][8] = 5;
+
+    a[2][0] = 7;  a[5][0] = 8;  a[8][0] = 9;
+    a[2][1] = 8;  a[5][1] = 9;  a[8][1] = 1;
+    a[2][2] = 9;  a[5][2] = 1;  a[8][2] = 2;
+    a[2][3] = 1;  a[5][3] = 2;  a[8][3] = 3;
+    a[2][4] = 2;  a[5][4] = 3;  a[8][4] = 4;
+    a[2][5] = 3;  a[5][5] = 4;  a[8][5] = 5;
+    a[2][6] = 4;  a[5][6] = 5;  a[8][6] = 6;
+    a[2][7] = 5;  a[5][7] = 6;  a[8][7] = 7;
+    a[2][8] = 6;  a[5][8] = 7;  a[8][8] = 8;
+
+    for (int i=0;i<n;i++)
+    	    {
+    	        for (int j=0;j<n;j++)
+    	        {
+    	            cout << a[i][j] << " ";
+    	            if((j+1)%3 == 0 && j < 8) cout << "| " ;
+    	        }
+    	        cout << endl;
+
+    	        		if((i+1)%3 == 0 && i < 8)
+    	        	{
+    	        		cout << "------+-------+-------" << endl;
+
+    	        	}
+    	    }
+    for (int count = 0; count < random; count ++ )
+    {
+    	int i =  rand() % 9;
+
+    	if(i == 0 || i == 1 || i == 2)
+    	{
+    		g = rand () % 3;
+    	}
+    	else if (i == 3 || i == 4 || i == 5)
+    	{
+    		g = rand () % 3 + 3;
+    	}
+    	else if (i == 6 || i == 7 || i == 8)
+    	{
+    	    g = rand () % 3 + 6;
+    	}
+
+
+    	for (int j = 0; j < n; j++)
+    	{
+    		b[j] = a[i][j];
+    		a[i][j] = a[g][j];
+    		a[g][j] = b[j];
+    	}
+    }
+
+for (int count = 0; count < random2; count ++ )
+{
+	int i =  rand() % 9;
+
+	if(i == 0 || i == 1 || i == 2)
+	{
+	      g = rand () % 3;
+	}
+	else if (i == 3 || i == 4 || i == 5)
+	{
+	      g = rand () % 3 + 3;
+	}
+	else if (i == 6 || i == 7 || i == 8)
+	{
+	      g = rand () % 3 + 6;
+	}
+
+	for (int j = 0; j < n; j++)
+	{
+		b[j] = a[j][i];
+		a[j][i] = a[j][g];
+		a[j][g] = b[j];
+	}
+}
+
+for (int i=0;i<n;i++)
+	 	 	    {
+	 	 	        for (int j=0;j<n;j++)
+	 	 	        {
+	 	 	            a1[i][j] = a[i][j];
+
+	 	 	        }
+	 	 	    }
+
+cout << "full sudoku"<< endl;
+
+for (int i=0;i<n;i++)
+	    {
+	        for (int j=0;j<n;j++)
+	        {
+	            cout << a[i][j] << " ";
+	            if((j+1)%3 == 0 && j < 8) cout << "| " ;
+	        }
+	        cout << endl;
+
+	        		if((i+1)%3 == 0 && i < 8)
+	        	{
+	        		cout << "------+-------+-------" << endl;
+
+	        	}
+
+	    }
+	 cout << endl;
+
+	 for (int count = 0; count < random3; count ++ )
+
+	 {
+		 int i =  rand() % 9;
+		 int j =  rand() % 9;
+		 a[i][j] = 0 ;
+	 }
+
+	 cout << "empty sudoku"<< endl;
+	 for (int i=0;i<n;i++)
+	 	    {
+	 	        for (int j=0;j<n;j++)
+	 	        {
+	 	            cout << a[i][j] << " ";
+	 	           if((j+1)%3 == 0 && j < 8) cout << "| " ;
+	 	        	        }
+	 	        	        cout << endl;
+
+	 	        	        		if((i+1)%3 == 0 && i < 8)
+	 	        	        	{
+	 	        	        		cout << "------+-------+-------" << endl;
+
+	 	        	        	}
+
+	 	        	    }
+	 	        	 cout << endl;
+
+ // решение
+
+	 for (int i=0;i<n;i++)
+		 	    {
+		 	        for (int j=0;j<n;j++)
+		 	        {
+		 	            if (a[i][j] == 0)
+		 	            {
+		 	            	for (int k = 1; k < 10 ; k++)
+		 	            			{
+		 	            		if (Check_Conflicts(k, i, j, a))
+
+		 	            					{
+		 	            					a[i][j] = k;
+		 	            					}
+		 	            			}
+		 	            }
+		 	        }
+		 	    }
+
+	 cout << "solved sudoku" << endl;
+
+	 for (int i=0;i<n;i++)
+	 	 	    {
+	 	 	        for (int j=0;j<n;j++)
+	 	 	        {
+	 	 	            cout << a[i][j] << " ";
+	 	 	          if((j+1)%3 == 0 && j < 8) cout << "| " ;
+	 	 	       	        }
+	 	 	       	        cout << endl;
+
+	 	 	       	        		if((i+1)%3 == 0 && i < 8)
+	 	 	       	        	{
+	 	 	       	        		cout << "------+-------+-------" << endl;
+
+	 	 	       	        	}
+
+	 	 	       	    }
+	 	 	       	 cout << endl;
+// проверка
+	 for (int i=0;i<n;i++)
+		 	 	    {
+		 	 	        for (int j=0;j<n;j++)
+		 	 	        {
+		 	 	        	if(a1[i][j] != a[i][j])
+		 	 	            cout << "Incorrect" << " " << i << " " << j << " ";
+		 	 	        	else cout << "Correct";
+		 	 	        }
+		 	 	        cout << endl;
+		 	 	    }
+    return 0;
+}
+
+
